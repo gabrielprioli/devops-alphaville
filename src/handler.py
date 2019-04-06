@@ -1,6 +1,7 @@
 import hashlib
 import json
 import re
+import random
 
 
 def validate_url(input):
@@ -13,9 +14,14 @@ def validate_url(input):
 
 
 def handler(event, context):
+    param_date = event.get("queryStringParameters").get("date")
+
+    if not param_date or not param_date.strip():
+        param_date = pick_random_date()
+
     lat = float(event['queryStringParameters']['latitude'])
     lon = float(event['queryStringParameters']['longitude'])
-    date = bytes(event['queryStringParameters']['date'], 'utf-8')
+    date = bytes(param_date, 'utf-8')
 
     coordinates = geohash(lat, lon, date)
 
@@ -49,3 +55,16 @@ def geohash(latitude, longitude, datedow):
     h = hashlib.md5(datedow).hexdigest()
     p, q = [('%f' % float.fromhex('0.' + x)) for x in (h[:16], h[16:32])]
     return {'latitude': float('%d%s' % (latitude, p[1:])), 'longitude': float('%d%s' % (longitude, q[1:]))}
+
+
+def pick_random_date():
+
+    r = random.randint(0, 2)
+
+    dates = [
+        '2018-07-27-24313.91',
+        '2018-07-28-24373.60',
+        '2018-07-29-24037.52'
+    ]
+
+    return dates[r]
