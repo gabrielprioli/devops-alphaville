@@ -18,7 +18,7 @@ after_success:
 before_deploy: aws cloudformation package --template-file cf.yaml --s3-bucket ${BUCKET_NAME} --output-template-file out.yaml
 deploy:
   provider: script
-  script: aws cloudformation deploy --template-file out.yaml --stack-name devops-alphaville --capabilities CAPABILITY_IAM
+  script: aws cloudformation deploy --template-file out.yaml --stack-name devops-alphaville-v1 --capabilities CAPABILITY_IAM
   skip_cleanup: true
   on:
     all_branches: true
